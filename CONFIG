@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+################################################################################
+# Configuration file for encrypting raspbian root with encrypt_root.sh script. #
+################################################################################
+#
+# shellcheck disable=SC1117
+# shellcheck disable=SC2034
+
+
+# Root device
+ROOTPART="/dev/mmcblk0p2"
+
+# Device for temporarily copying data from root.
+# It has to have enough capacity to hold the data.
+# NOTE: All existing data will be lost.
+USBDEV="/dev/sda"
+
+# Desired name that device mapper will use for the encrypted root partition
+MAPPERNAME="root"
+
+### cryptsetup options
+# Note:
+# XTS splits the supplied key in half, so to use AES-256 instead of
+# AES-128 you have to set the XTS key-size to 512.
+# https://en.wikipedia.org/wiki/Disk_encryption_theory#XEX-based_tweaked-codebook_mode_with_ciphertext_stealing_.28XTS.29
+#
+# To list available options one can run:
+# cryptsetup benchmark
+# less /proc/crypto
+#
+CRYPTCIPHER="aes-xts-plain64"
+CRYPTKEYSIZE="256"
+CRYPTHASH="sha256"
+CRYPTITERTIME="2000"
+
+# Check data integrity with SHA1 hash when copying data back and forth.
+# y/n
+HASHING="y"
+
